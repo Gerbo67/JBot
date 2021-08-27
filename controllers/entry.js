@@ -1,14 +1,20 @@
 // require
 const Canvas = require("canvas");
+const {QueryAll, QueryById, QueryAddUserId} = require("../utils/queryData");
 
 module.exports = (client, MessageEmbed, MessageAttachment) => {
     client.on('guildMemberAdd', async member => {
         try {
-            // message private
-            await sendMessagePrivate(MessageEmbed, member);
+            if (await QueryById(member.user.id) === -1) {
+                // add new user
+                await QueryAddUserId(member.user.id);
 
-            // message public (canvas)
-            await sendMessagePublic(member, MessageAttachment, client);
+                // message private
+                await sendMessagePrivate(MessageEmbed, member);
+
+                // message public (canvas)
+                await sendMessagePublic(member, MessageAttachment, client);
+            }
         } catch (e) {
             console.log({message: "No send message", detail: e});
         }
@@ -61,9 +67,11 @@ async function sendMessagePrivate(MessageEmbed, member) {
 }
 
 async function sendMessagePublic(member, MessageAttachment, client) {
+    // query channelId
+    let jsonData = {...await QueryAll()};
 
     // channel for welcome
-    const welcomeChannel = client.channels.cache.get('880882296478126140');
+    const welcomeChannel = client.channels.cache.get(jsonData.channelId);
 
     // load font
     await Canvas.registerFont('./font/muktamalar.ttf', {family: 'MuktaMalar'})

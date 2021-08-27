@@ -1,8 +1,8 @@
 // requires
 require('dotenv').config();
-const Canvas = require('canvas');
 const {Client, MessageEmbed, Intents, MessageAttachment} = require('discord.js');
 const entry = require('./controllers/entry');
+const fs = require("fs");
 
 // object Client initialization
 const client = new Client({
@@ -42,7 +42,7 @@ client.on('interactionCreate', async interaction =>{
  */
 client.on('messageCreate', async msg => {
     if (!msg.author.bot) {
-
+        //console.log(await QueryById("1218100471"));
     }
 });
 

@@ -14,7 +14,8 @@
     "canvas": "^2.8.0",
     "cross-env": "^7.0.3",
     "discord.js": "^13.0.1",
-    "dotenv": "^10.0.0"
+    "dotenv": "^10.0.0",
+    "fs": "^0.0.1-security"
   },
   "devDependencies": {
     "nodemon": "^2.0.12"
