@@ -1,20 +1,20 @@
 // requires
 require('dotenv').config();
+const Canvas = require('canvas');
+const {Client, MessageEmbed, Intents, MessageAttachment} = require('discord.js');
+const entry = require('./controllers/entry');
 
-const {Client, MessageEmbed, Intents} = require('discord.js');
+// object Client initialization
 const client = new Client({
     intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES],
     allowedMentions: {parse: ['users', 'roles'], repliedUser: true}
 });
 
-const entry = require('./controllers/entry');
-
+// bot ready
 client.on('ready', () => {
     console.log(`Bot ${client.user.username}#${client.user.discriminator} escuchando.`)
-    entry(client, MessageEmbed);
-
-
-})
+    entry(client, MessageEmbed, MessageAttachment);
+});
 /*
 client.on('ready', async () =>{
     client.user.setPresence({activities: [{name: 'Gerbo67', type:'WATCHING'}]});
