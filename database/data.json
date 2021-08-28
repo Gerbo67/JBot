@@ -1,1 +1,18 @@
-{"channelId":"880882296478126140","channelIdRemember":"881000559635726367","usersInto":["881199809602662430"],"rememberDetails":[]}
+{
+  "channelId": "880882296478126140",
+  "channelIdRemember": "881000559635726367",
+  "usersInto": [
+    "881199809602662430",
+    "558706512193650706"
+  ],
+  "rememberDetails": [
+    {
+      "id": 78598,
+      "date": "29/08/21",
+      "title": "hola",
+      "description": "hola",
+      "user": "Creado por: Bro#2226",
+      "avatar": "558706512193650706"
+    }
+  ]
+}
