@@ -16,11 +16,6 @@ const firstCommand = {
         description: 'Una descripcion para el recordatorio',
         type: 'STRING',
         required: 'true'
-    }, {
-        name: 'pie',
-        description: 'Un pie de pagina para el recordatorio',
-        type: 'STRING',
-        required: 'false'
     }]
 };
 

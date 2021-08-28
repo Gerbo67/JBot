@@ -1,12 +1,11 @@
 // requires
 require('dotenv').config();
-const {Client, MessageEmbed, Intents, MessageAttachment} = require('discord.js');
 const cron = require("node-cron");
-const entry = require('./controllers/entry');
-const {firstCommand, secondCommand} = require("./utils/commands");
-const {addRemember, deleteRemember} = require("./controllers/remember");
 const {dateNow} = require("./utils/date");
-const {QueryAll} = require("./utils/queryData");
+const entry = require('./controllers/entry');
+const {QueryAll, QueryDeleteRemember} = require("./utils/queryData");
+const {addRemember, deleteRemember, embedRemember} = require("./controllers/remember");
+const {Client, MessageEmbed, Intents, MessageAttachment, MessageActionRow, MessageButton} = require('discord.js');
 
 // object Client initialization
 const client = new Client({
@@ -17,15 +16,17 @@ const client = new Client({
 // bot ready
 client.on('ready', async () => {
     console.log(`Bot ${client.user.username}#${client.user.discriminator} escuchando.`)
-    entry(client, MessageEmbed, MessageAttachment);
+    await entry(client, MessageEmbed, MessageAttachment, MessageButton, MessageActionRow);
 
     // register commands
+    /*
     await client.guilds.cache.get('875443271697068062')?.commands.create(firstCommand);
     await client.guilds.cache.get('875443271697068062')?.commands.create(secondCommand);
-
-
-    //let jsonData = {...await QueryAll()};
-    //dateNow()
+    await client.guilds.cache.get('875443271697068062')?.emojis.create('./img/twitch.png', 'Twitch');
+    await client.guilds.cache.get('875443271697068062')?.emojis.create('./img/youtube.png', 'Youtube');
+    await client.guilds.cache.get('875443271697068062')?.emojis.create('./img/instagram.png', 'Instagram');
+    await client.guilds.cache.get('875443271697068062')?.emojis.create('./img/twitter.png', 'Twitter');
+     */
 });
 
 
@@ -41,20 +42,23 @@ client.on('interactionCreate', async interaction => {
 
 
 // timer for day
-/*
-cron.schedule('0 0 1-31 * *', () => {
-    console.log("Hola");
-});
- */
-
-
-/*
-client.on('messageCreate', async msg => {
-    if (!msg.author.bot) {
-        //console.log(await QueryById("1218100471"));
+cron.schedule('1 0 1-31 * *', async () => {
+    let jsonData = {...await QueryAll()};
+    for (const detail of jsonData.rememberDetails) {
+        if (detail.date === dateNow()) {
+            await embedRemember(client, MessageEmbed, detail);
+            await QueryDeleteRemember(detail.id);
+        }
     }
 });
-*/
+
+
+
+client.on('messageCreate', async msg => {
+    if (!msg.author.bot) {
+    }
+});
+
 
 
 client.login(process.env.TOKENBOT);

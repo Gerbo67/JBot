@@ -2,30 +2,25 @@
 const Canvas = require("canvas");
 const {QueryAll, QueryById, QueryAddUserId} = require("../utils/queryData");
 
-module.exports = (client, MessageEmbed, MessageAttachment) => {
+module.exports = (client, MessageEmbed, MessageAttachment, MessageButton, MessageActionRow) => {
     client.on('guildMemberAdd', async member => {
-        try {
-            if (await QueryById(member.user.id) === -1) {
-                // add new user
-                await QueryAddUserId(member.user.id);
+        // message private
+        await sendMessagePrivate(MessageEmbed, MessageButton, MessageActionRow, member);
 
-                // message private
-                await sendMessagePrivate(MessageEmbed, member);
+        // message public (canvas)
+        await sendMessagePublic(member, MessageAttachment, client);
 
-                // message public (canvas)
-                await sendMessagePublic(member, MessageAttachment, client);
-            }
-        } catch (e) {
-            console.log({message: "No send message", detail: e});
-        }
+        // add new user
+        await QueryAddUserId(member.user.id);
     });
 }
 
-async function sendMessagePrivate(MessageEmbed, member) {
+async function sendMessagePrivate(MessageEmbed, MessageButton, MessageActionRow, member) {
     // message private
     const welcome = await new MessageEmbed()
         .setTitle(`Bienvenido ${member.user.username} a esta familia de MR BRO`)
         .setFooter('Estamos ansiosos de conocerte')
+        .setDescription('En este servidor es dedicado a los juegos **Play to Earn**, porfavor de leer las reglas para no tener incovenientes, solo queda decirte que disfurtes tu estadia')
         .setColor(0xB7FFB1)
         .setThumbnail('https://cdn.discordapp.com/icons/734787764679082174/17de276cc643ff817bbeabdb5696d36e.png')
     const games = await new MessageEmbed()
@@ -35,35 +30,37 @@ async function sendMessagePrivate(MessageEmbed, member) {
         .addField('🃏', '```Splinterlands```', true)
         .setFooter('Puedes recomendar algun otro juego 🤗')
         .setColor(0x1E90FF);
+
     const spam = await new MessageEmbed()
-        .setTitle(`Puedes buscarme en estas redes.`)
-        .setColor(0x35EAD4);
-    const twitch = await new MessageEmbed()
-        .setTitle(`Twitch`)
-        .setThumbnail('https://blog.twitch.tv/assets/uploads/01-twitch-logo.jpg')
-        .setDescription('https://www.twitch.tv/soymrbro')
-        .setFooter('Aqui probamos los juegos y cosas nuevas, ven a platicar cuando puedas.')
-        .setColor(0xBA9BFF);
-    const youtube = await new MessageEmbed()
-        .setTitle(`Youtube`)
-        .setThumbnail('https://1000logos.net/wp-content/uploads/2017/05/Old-YouTube-logo.jpg')
-        .setDescription('https://www.youtube.com/channel/UCdWKZFauW7-tn3DCwBIyweQ')
-        .setFooter('Aqui puedes ver tutoriales de los juegos.')
-        .setColor(0xED6476);
-    const instagram = await new MessageEmbed()
-        .setTitle(`Instagram`)
-        .setThumbnail('https://www.exclusievesportcentra.nl/content/uploads/2019/03/new-instagram-logo-png-transparent.png')
-        .setDescription('https://www.instagram.com/soymrbro/')
-        .setFooter('Mi OnlyFans 😘')
-        .setColor(0xFFE990);
-    const twitter = await new MessageEmbed()
-        .setTitle(`Twitter`)
-        .setThumbnail('https://www.pngkey.com/png/full/2-27646_twitter-logo-png-transparent-background-logo-twitter-png.png')
-        .setDescription('https://twitter.com/SoyMrBro')
-        .setFooter('Mis noticias y reclamos 🤣')
-        .setColor(0x95F2FF);
+        .setTitle(`Mis Redes sociales`)
+        .setColor(0x4A1B63);
+
+    const row = new MessageActionRow()
+        .addComponents(
+            new MessageButton()
+                .setLabel('Twitch')
+                .setStyle('LINK')
+                .setURL('https://www.twitch.tv/soymrbro')
+                .setEmoji('881043363363704853'),
+            new MessageButton()
+                .setLabel('Youtube')
+                .setStyle('LINK')
+                .setURL('https://www.youtube.com/channel/UCdWKZFauW7-tn3DCwBIyweQ')
+                .setEmoji('881043364319993898'),
+            new MessageButton()
+                .setLabel('Instagram')
+                .setStyle('LINK')
+                .setURL('https://www.instagram.com/soymrbro/')
+                .setEmoji('881034469212028938'),
+            new MessageButton()
+                .setLabel('Twitter')
+                .setStyle('LINK')
+                .setURL('https://twitter.com/SoyMrBro')
+                .setEmoji('881043367146950698')
+        );
+
     // send the embed to the same channel as the message
-    member.send({embeds: [welcome, games, spam, twitch, youtube, instagram, twitter]});
+    member.send({embeds: [welcome, games, spam], components: [row]});
 }
 
 async function sendMessagePublic(member, MessageAttachment, client) {
@@ -71,7 +68,7 @@ async function sendMessagePublic(member, MessageAttachment, client) {
     let jsonData = {...await QueryAll()};
 
     // channel for welcome
-    const welcomeChannel = client.channels.cache.get(jsonData.channelId);
+    const welcomeChannel = client.channels.cache.get(jsonData.channelIdWelcome);
 
     // load font
     await Canvas.registerFont('./font/muktamalar.ttf', {family: 'MuktaMalar'})
@@ -108,7 +105,7 @@ async function sendMessagePublic(member, MessageAttachment, client) {
     const canvasHat = Canvas.createCanvas(1024, 500);
     const contextHat = canvasHat.getContext('2d');
 
-    const typeBackground = await Canvas.loadImage(await canvasBackground.toBuffer());
+    const typeBackground = await Canvas.loadImage(canvasBackground.toBuffer());
     contextHat.drawImage(typeBackground, 0, 0, canvasHat.width, canvasHat.height);
 
     const hat = await Canvas.loadImage('./img/gorra.png');
