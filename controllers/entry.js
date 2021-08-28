@@ -4,14 +4,16 @@ const {QueryAll, QueryById, QueryAddUserId} = require("../utils/queryData");
 
 module.exports = (client, MessageEmbed, MessageAttachment, MessageButton, MessageActionRow) => {
     client.on('guildMemberAdd', async member => {
-        // message private
-        await sendMessagePrivate(MessageEmbed, MessageButton, MessageActionRow, member);
+        if (await QueryById(member.user.id) === -1) {
+            // message private
+            await sendMessagePrivate(MessageEmbed, MessageButton, MessageActionRow, member);
 
-        // message public (canvas)
-        await sendMessagePublic(member, MessageAttachment, client);
+            // message public (canvas)
+            await sendMessagePublic(member, MessageAttachment, client);
 
-        // add new user
-        await QueryAddUserId(member.user.id);
+            // add new user
+            await QueryAddUserId(member.user.id);
+        }
     });
 }
 
@@ -68,7 +70,7 @@ async function sendMessagePublic(member, MessageAttachment, client) {
     let jsonData = {...await QueryAll()};
 
     // channel for welcome
-    const welcomeChannel = client.channels.cache.get(jsonData.channelIdWelcome);
+    const welcomeChannel = client.channels.cache.get(jsonData.channelId);
 
     // load font
     await Canvas.registerFont('./font/muktamalar.ttf', {family: 'MuktaMalar'})

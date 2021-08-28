@@ -6,6 +6,7 @@ const entry = require('./controllers/entry');
 const {QueryAll, QueryDeleteRemember} = require("./utils/queryData");
 const {addRemember, deleteRemember, embedRemember} = require("./controllers/remember");
 const {Client, MessageEmbed, Intents, MessageAttachment, MessageActionRow, MessageButton} = require('discord.js');
+const {firstCommand} = require("./utils/commands");
 
 // object Client initialization
 const client = new Client({
@@ -42,7 +43,7 @@ client.on('interactionCreate', async interaction => {
 
 
 // timer for day
-cron.schedule('1 0 1-31 * *', async () => {
+cron.schedule('55 13 1-31 * *', async () => {
     let jsonData = {...await QueryAll()};
     for (const detail of jsonData.rememberDetails) {
         if (detail.date === dateNow()) {
