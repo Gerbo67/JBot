@@ -1,5 +1,6 @@
 // require
 const fs = require("fs");
+const {getRandomArbitrary} = require("../utils/random");
 
 async function QueryAll() {
     let data = fs.readFileSync('./database/data.json', "utf8");
@@ -20,4 +21,31 @@ async function QueryAddUserId(userId) {
     fs.writeFileSync("./database/data.json", JSON.stringify(jsonData));
 }
 
-module.exports = {QueryAll, QueryById,QueryAddUserId};
+async function QueryAddRemember(date, title, description, footer) {
+    try {
+        let jsonData = {...await QueryAll()};
+        let rememberId;
+        let i = false;
+
+        while (i === false) {
+            rememberId = getRandomArbitrary(10000, 90000);
+            const isLargeNumber = (element) => element === rememberId;
+            if (jsonData.rememberId.findIndex(isLargeNumber) === -1) {
+                i = true;
+                jsonData.rememberId.push(rememberId);
+
+                if (footer !== null) {
+                    jsonData.rememberDetails.push({date: date, title: title, description: description, footer: footer});
+                } else {
+                    jsonData.rememberDetails.push({date: date, title: title, description: description});
+                }
+            }
+        }
+        fs.writeFileSync("./database/data.json", JSON.stringify(jsonData));
+        return rememberId;
+    } catch (e) {
+        return -1;
+    }
+}
+
+module.exports = {QueryAll, QueryById, QueryAddUserId, QueryAddRemember};

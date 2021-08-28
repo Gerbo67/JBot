@@ -2,7 +2,9 @@
 require('dotenv').config();
 const {Client, MessageEmbed, Intents, MessageAttachment} = require('discord.js');
 const entry = require('./controllers/entry');
-const fs = require("fs");
+const {firstCommand} = require("./utils/commands");
+const {addRemember} = require("./controllers/remember");
+const {dateNow, dateCondition} = require("./utils/date");
 
 // object Client initialization
 const client = new Client({
@@ -11,35 +13,22 @@ const client = new Client({
 });
 
 // bot ready
-client.on('ready', () => {
+client.on('ready', async () => {
     console.log(`Bot ${client.user.username}#${client.user.discriminator} escuchando.`)
     entry(client, MessageEmbed, MessageAttachment);
+
+    // register commands
+    await client.guilds.cache.get('875443271697068062')?.commands.create(firstCommand);
 });
-/*
-client.on('ready', async () =>{
-    client.user.setPresence({activities: [{name: 'Gerbo67', type:'WATCHING'}]});
-    console.log(`${client.user.tag} is online`)
 
-    const data = {
-        name: 'ping',
-        description: 'Replies with pong!',
-        options: [{
-            name: 'input',
-            description: 'Enter a string',
-            type: 'STRING',
-        }],
-    }
 
-    const command = await client.guilds.cache.get('875443271697068062')?.commands.create(data);
-})
-
-client.on('interactionCreate', async interaction =>{
-    if (interaction.commandName === 'ping') {
-        const text = interaction.options.getString('input')
-        await interaction.reply({ content: 'Pong!' + text, ephemeral: true});
+client.on('interactionCreate', async interaction => {
+    if (interaction.commandName === 'recordatorio') {
+        await addRemember(interaction);
     }
 });
- */
+
+
 client.on('messageCreate', async msg => {
     if (!msg.author.bot) {
         //console.log(await QueryById("1218100471"));
