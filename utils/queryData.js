@@ -18,7 +18,7 @@ async function QueryById(userId) {
 async function QueryAddUserId(userId) {
     let jsonData = {...await QueryAll()};
     jsonData.usersInto.push(userId);
-    fs.writeFileSync("./database/data.json", JSON.stringify(jsonData));
+    fs.writeFileSync("./database/data.json", JSON.stringify(jsonData),{encoding:'utf-8'});
 }
 
 async function QueryAddRemember(date, title, description, footer) {
@@ -30,22 +30,50 @@ async function QueryAddRemember(date, title, description, footer) {
         while (i === false) {
             rememberId = getRandomArbitrary(10000, 90000);
             const isLargeNumber = (element) => element === rememberId;
-            if (jsonData.rememberId.findIndex(isLargeNumber) === -1) {
-                i = true;
-                jsonData.rememberId.push(rememberId);
 
+            let index = jsonData.rememberDetails.findIndex(remember => {
+                return remember.id === rememberId;
+            });
+
+            console.log(index);
+            if (index === -1) {
+                i = true;
                 if (footer !== null) {
-                    jsonData.rememberDetails.push({date: date, title: title, description: description, footer: footer});
+                    jsonData.rememberDetails.push({
+                        id: rememberId,
+                        date: date,
+                        title: title,
+                        description: description,
+                        footer: footer
+                    });
                 } else {
                     jsonData.rememberDetails.push({date: date, title: title, description: description});
                 }
             }
         }
-        fs.writeFileSync("./database/data.json", JSON.stringify(jsonData));
+        fs.writeFileSync("./database/data.json", JSON.stringify(jsonData),{encoding:'utf-8'});
         return rememberId;
     } catch (e) {
         return -1;
     }
 }
 
-module.exports = {QueryAll, QueryById, QueryAddUserId, QueryAddRemember};
+async function QueryDeleteRemember(id) {
+    try {
+        let jsonData = {...await QueryAll()};
+
+        let index = jsonData.rememberDetails.findIndex(remember => {
+            return remember.id === id;
+        });
+
+        jsonData.rememberDetails.splice(index, 1);
+
+        fs.writeFileSync("./database/data.json", JSON.stringify(jsonData),{encoding:'utf-8'});
+
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
+module.exports = {QueryAll, QueryById, QueryAddUserId, QueryAddRemember, QueryDeleteRemember};

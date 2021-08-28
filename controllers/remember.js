@@ -1,6 +1,6 @@
 const moment = require('moment');
 const {dateCondition} = require("../utils/date");
-const {QueryAddRemember} = require("../utils/queryData");
+const {QueryAddRemember, QueryDeleteRemember} = require("../utils/queryData");
 
 async function addRemember(interaction) {
     const date = interaction.options.getString('fecha');
@@ -14,7 +14,7 @@ async function addRemember(interaction) {
         if (dateCondition(date)) {
             let rememberId = await QueryAddRemember(date, title, body, footer);
             if (rememberId !== -1) {
-                await interaction.reply({content: `Recordatorio guardado correctamente con fecha: ${date} y por titulo: ${title}, ID:${rememberId}`});
+                await interaction.reply({content: `Recordatorio guardado correctamente con fecha: ${date} y por titulo: ${title}, ID: ${rememberId}`});
             } else {
                 await interaction.reply({content: 'No se ha guardado, favor de contactar con el administrador'});
             }
@@ -27,4 +27,14 @@ async function addRemember(interaction) {
 
 }
 
-module.exports = {addRemember};
+async function deleteRemember(interaction) {
+    const rememberId = interaction.options.getString('id');
+
+    if (await QueryDeleteRemember(parseInt(rememberId))) {
+        await interaction.reply({content: 'Eliminado correctamente'});
+    } else {
+        await interaction.reply({content: 'No pude ser eliminado o no corresponde a un id existente'});
+    }
+}
+
+module.exports = {addRemember, deleteRemember};

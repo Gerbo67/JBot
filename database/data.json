@@ -4,21 +4,27 @@
     "599777226241736735",
     "715689409458208809"
   ],
-  "rememberId": [
-    85535,
-    82865
-  ],
   "rememberDetails": [
     {
-      "date": "28/08/21",
-      "title": "Nuevo juego",
-      "description": "Proximamente habra un nuevo juego",
-      "footer": "Aqui e"
+      "id": 42423,
+      "date": "29/08/21",
+      "title": "Titulo aqui1",
+      "description": "Aqui es el cuerpo",
+      "footer": "Aqui es el pie"
     },
     {
+      "id": 53696,
       "date": "28/08/21",
-      "title": "Titulo",
-      "description": "Aqui va un cuerpo"
+      "title": "Titulo aqui",
+      "description": "Aqui es el cuerpo",
+      "footer": "Aqui es el pie"
+    },
+    {
+      "id": 536967,
+      "date": "28/08/21",
+      "title": "Titulo aqui",
+      "description": "Aqui es el cuerpo",
+      "footer": "Aqui es el pie"
     }
   ]
 }
