@@ -43,28 +43,15 @@ client.on('interactionCreate', async interaction => {
 
 
 // timer for day
-cron.schedule('*/2 * * * *', async () => {
-    console.log('Fecha del sistema: '+dateNow());
+cron.schedule('1 0 1-31 * *', async () => {
     let jsonData = {...await QueryAll()};
-
-    console.log(jsonData);
-    console.log(jsonData.rememberDetails);
     for (const detail of jsonData.rememberDetails) {
-        console.log(detail);
         if (detail.date === dateNow()) {
             await embedRemember(client, MessageEmbed, detail);
             await QueryDeleteRemember(detail.id);
         }
     }
 });
-
-
-
-client.on('messageCreate', async msg => {
-    if (!msg.author.bot) {
-    }
-});
-
 
 
 client.login(process.env.TOKENBOT);

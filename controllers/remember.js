@@ -10,7 +10,7 @@ async function addRemember(interaction) {
     //validate date string
     if (moment(date, 'DD/MM/YY', true).isValid()) {
         //validate date now
-        if (true) {
+        if (dateCondition(date)) {
             let rememberId = await QueryAddRemember(date, title, body, `${interaction.user.username}#${interaction.user.discriminator}`, interaction.user.id.toString());
             if (rememberId !== -1) {
                 await interaction.reply({content: `Recordatorio guardado correctamente con fecha: ${date} y por titulo: ${title}, ID: ${rememberId}`});
