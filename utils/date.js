@@ -1,6 +1,6 @@
 const dateSystem = new Date();
 
-function dateNow() {
+function dateNow(){
 
     let day = dateSystem.getDate().toString();
     let month = (dateSystem.getMonth() + 1).toString();
