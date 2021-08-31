@@ -43,8 +43,7 @@ client.on('interactionCreate', async interaction => {
 
 
 // timer for day
-cron.schedule('*/1 * * * *', async () => {
-    console.log("Ejecucion por min");
+cron.schedule('1 0 1-31 * *', async () => {
     let jsonData = {...await QueryAll()};
     for (const detail of jsonData.rememberDetails) {
         if (detail.date === dateNow()) {
