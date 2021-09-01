@@ -44,10 +44,7 @@ client.on('interactionCreate', async interaction => {
 
 // timer for day
 cron.schedule('*/1 * * * *', async () => {
-    console.log("Paso 1 min");
     let jsonData = {...await QueryAll()};
-    console.log(jsonData.rememberDetails);
-    console.log(dateNow());
     for (const detail of jsonData.rememberDetails) {
         if (detail.date === dateNow()) {
             await embedRemember(client, MessageEmbed, detail);
