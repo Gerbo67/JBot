@@ -43,8 +43,8 @@ client.on('interactionCreate', async interaction => {
 
 
 // timer for day
-cron.schedule('30 */1 * * *', async () => {
-    console.log("Paso 1 hora");
+cron.schedule('*/1 * * * *', async () => {
+    console.log("Paso 1 min");
     let jsonData = {...await QueryAll()};
     console.log(jsonData.rememberDetails);
     console.log(dateNow());
