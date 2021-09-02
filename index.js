@@ -43,11 +43,10 @@ client.on('interactionCreate', async interaction => {
 
 
 // timer for day
-cron.schedule('*/2 * * * *', async () => {
+cron.schedule('1 */2 * * *', async () => {
     let jsonData = {...await QueryAll()};
     console.log(jsonData);
     for (const detail of jsonData.rememberDetails) {
-        console.log(detail);
         if (detail.date === dateNow()) {
             console.log("Entro");
             await embedRemember(client, MessageEmbed, detail);
