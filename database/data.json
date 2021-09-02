@@ -2,5 +2,14 @@
   "channelId": "880882296478126140",
   "channelIdRemember": "881000559635726367",
   "usersInto": [],
-  "rememberDetails": []
+  "rememberDetails": [
+    {
+      "id": 62024,
+      "date": "02/09/21",
+      "title": "Nuevo recordatorio",
+      "description": "Aqui va un recordatorio",
+      "user": "Creado por: Gerbo67#2644",
+      "avatar": "340555238874546178"
+    }
+  ]
 }
