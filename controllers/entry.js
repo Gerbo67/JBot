@@ -43,22 +43,22 @@ async function sendMessagePrivate(MessageEmbed, MessageButton, MessageActionRow,
                 .setLabel('Twitch')
                 .setStyle('LINK')
                 .setURL('https://www.twitch.tv/soymrbro')
-                .setEmoji('881043363363704853'),
+                .setEmoji('883230334483845150'),
             new MessageButton()
                 .setLabel('Youtube')
                 .setStyle('LINK')
                 .setURL('https://www.youtube.com/channel/UCdWKZFauW7-tn3DCwBIyweQ')
-                .setEmoji('881043364319993898'),
+                .setEmoji('883230336476119040'),
             new MessageButton()
                 .setLabel('Instagram')
                 .setStyle('LINK')
                 .setURL('https://www.instagram.com/soymrbro/')
-                .setEmoji('881034469212028938'),
+                .setEmoji('883230340741738546'),
             new MessageButton()
                 .setLabel('Twitter')
                 .setStyle('LINK')
                 .setURL('https://twitter.com/SoyMrBro')
-                .setEmoji('881043367146950698')
+                .setEmoji('883230343153451008')
         );
 
     // send the embed to the same channel as the message
