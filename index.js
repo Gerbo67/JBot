@@ -20,30 +20,37 @@ client.on('ready', async () => {
     await entry(client, MessageEmbed, MessageAttachment, MessageButton, MessageActionRow);
 
     // register commands
+   // await client.guilds.cache.get('875443271697068062')?.commands.create(firstCommand);
+   // await client.guilds.cache.get('875443271697068062')?.commands.create(secondCommand);
+
     /*
-    await client.guilds.cache.get('875443271697068062')?.commands.create(firstCommand);
-    await client.guilds.cache.get('875443271697068062')?.commands.create(secondCommand);
-    await client.guilds.cache.get('875443271697068062')?.emojis.create('./img/twitch.png', 'Twitch');
-    await client.guilds.cache.get('875443271697068062')?.emojis.create('./img/youtube.png', 'Youtube');
-    await client.guilds.cache.get('875443271697068062')?.emojis.create('./img/instagram.png', 'Instagram');
-    await client.guilds.cache.get('875443271697068062')?.emojis.create('./img/twitter.png', 'Twitter');
+    await client.guilds.cache.get('734787764679082174')?.emojis.create('./img/twitch.png', 'Twitch');
+    await client.guilds.cache.get('734787764679082174')?.emojis.create('./img/youtube.png', 'Youtube');
+    await client.guilds.cache.get('734787764679082174')?.emojis.create('./img/instagram.png', 'Instagram');
+    await client.guilds.cache.get('734787764679082174')?.emojis.create('./img/twitter.png', 'Twitter');
      */
+
 });
 
 
 client.on('interactionCreate', async interaction => {
-    if (interaction.commandName === 'recordatorio') {
-        await addRemember(interaction);
-    }
+    if(false){
+        if (interaction.commandName === 'recordatorio') {
+            await addRemember(interaction);
+        }
 
-    if (interaction.commandName === 'eliminar-recordatorio') {
-        await deleteRemember(interaction);
+        if (interaction.commandName === 'eliminar-recordatorio') {
+            await deleteRemember(interaction);
+        }
+    }else{
+        interaction.reply({content:"Comandos en mantenimiento"});
     }
 });
 
 
 // timer for day
-cron.schedule('1 */2 * * *', async () => {
+/*
+cron.schedule('1 *2 * * *', async () => {
     let jsonData = {...await QueryAll()};
     console.log(jsonData);
     for (const detail of jsonData.rememberDetails) {
@@ -54,6 +61,8 @@ cron.schedule('1 */2 * * *', async () => {
         }
     }
 });
+*/
+
 
 
 client.login(process.env.TOKENBOT);
