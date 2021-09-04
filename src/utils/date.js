@@ -1,7 +1,8 @@
+// obj of Date
 const dateSystem = new Date();
 
-function dateNow(){
-
+// gets the formatted date DD/MM/YY
+function dateNow() {
     let day = dateSystem.getDate().toString();
     let month = (dateSystem.getMonth() + 1).toString();
     let year = dateSystem.getFullYear().toString();
@@ -21,6 +22,7 @@ function dateNow(){
     return `${day}/${month}/${year}`;
 }
 
+// condition date
 function dateCondition(date) {
     const dateSystem = new Date();
     let day = dateSystem.getDate();
@@ -44,9 +46,7 @@ function dateCondition(date) {
             if (parseInt(dateSegment[0]) <= day)
                 return false;
         }
-
     }
-
     return true;
 }
 

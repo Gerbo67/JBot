@@ -1,3 +1,7 @@
+/* Commands for discord */
+
+
+// /recordatorio FECHA TITULO CUERPO
 const firstCommand = {
     name: 'recordatorio',
     description: 'Agregar un recordatorio por fecha',
@@ -19,6 +23,7 @@ const firstCommand = {
     }]
 };
 
+// /eliminar-recordatorio ID
 const secondCommand = {
     name: 'eliminar-recordatorio',
     description: 'Eliminar recordatorio por ID',
