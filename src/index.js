@@ -1,12 +1,12 @@
-// requires
+// imports
 require('dotenv').config();
-const cron = require("node-cron");
-const {dateNow} = require("./utils/date");
-const entry = require('./controllers/entry');
-const {QueryAll, QueryDeleteRemember} = require("./utils/queryData");
-const {addRemember, deleteRemember, embedRemember} = require("./controllers/remember");
+const cron = require('node-cron');
+const {dateNow} = require('./utils/date');
+const entry = require('./controllers/entryController');
+const {addRemember, deleteRemember, embedRemember} = require('./controllers/rememberController');
 const {Client, MessageEmbed, Intents, MessageAttachment, MessageActionRow, MessageButton} = require('discord.js');
-const {firstCommand} = require("./utils/commands");
+const {firstCommand, secondCommand} = require("./utils/commands");
+const {QueryAllRemember, QueryDeleteRemember} = require("./dao/rememberDAO");
 
 // object Client initialization
 const client = new Client({
@@ -16,12 +16,13 @@ const client = new Client({
 
 // bot ready
 client.on('ready', async () => {
-    console.log(`Bot ${client.user.username}#${client.user.discriminator} escuchando.`)
+    console.log(`Bot ${client.user.username}#${client.user.discriminator} escuchando.`);
+
     await entry(client, MessageEmbed, MessageAttachment, MessageButton, MessageActionRow);
 
     // register commands
-   // await client.guilds.cache.get('875443271697068062')?.commands.create(firstCommand);
-   // await client.guilds.cache.get('875443271697068062')?.commands.create(secondCommand);
+    //await client.guilds.cache.get('875443271697068062')?.commands.create(firstCommand);
+    //await client.guilds.cache.get('875443271697068062')?.commands.create(secondCommand);
 
     /*
     await client.guilds.cache.get('734787764679082174')?.emojis.create('./img/twitch.png', 'Twitch');
@@ -34,7 +35,7 @@ client.on('ready', async () => {
 
 
 client.on('interactionCreate', async interaction => {
-    if(false){
+    if (true) {
         if (interaction.commandName === 'recordatorio') {
             await addRemember(interaction);
         }
@@ -42,26 +43,25 @@ client.on('interactionCreate', async interaction => {
         if (interaction.commandName === 'eliminar-recordatorio') {
             await deleteRemember(interaction);
         }
-    }else{
-        interaction.reply({content:"Comandos en mantenimiento"});
+    } else {
+        interaction.reply({content: "Comandos en mantenimiento"});
     }
 });
 
 
 // timer for day
-/*
-cron.schedule('1 *2 * * *', async () => {
-    let jsonData = {...await QueryAll()};
-    console.log(jsonData);
-    for (const detail of jsonData.rememberDetails) {
-        if (detail.date === dateNow()) {
-            console.log("Entro");
+let hr = cron.schedule('*/10 * * * * *', async () => {
+    const data = await QueryAllRemember();
+    console.log(data);
+    console.log(dateNow());
+    for (const detail of data) {
+        if (detail.dateRemember === dateNow()) {
             await embedRemember(client, MessageEmbed, detail);
             await QueryDeleteRemember(detail.id);
         }
     }
+    hr.start();
 });
-*/
 
 
 

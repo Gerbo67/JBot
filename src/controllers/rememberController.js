@@ -1,6 +1,7 @@
 const moment = require('moment');
 const {dateCondition} = require("../utils/date");
-const {QueryAddRemember, QueryDeleteRemember, QueryAll} = require("../utils/queryData");
+const {QueryAddRemember, QueryRememberById, QueryDeleteRemember} = require("../dao/rememberDAO");
+const {getRandomArbitrary} = require("../utils/random");
 
 async function addRemember(interaction) {
     const date = interaction.options.getString('fecha');
@@ -11,8 +12,21 @@ async function addRemember(interaction) {
     if (moment(date, 'DD/MM/YY', true).isValid()) {
         //validate date now
         if (dateCondition(date)) {
-            let rememberId = await QueryAddRemember(date, title, body, `${interaction.user.username}#${interaction.user.discriminator}`, interaction.user.id.toString());
-            if (rememberId !== -1) {
+            let condition = true;
+            let rememberId;
+
+            while (condition) {
+                console.log("Entro");
+                rememberId = getRandomArbitrary(10000, 90000);
+                console.log(rememberId);
+                let result = await QueryRememberById(rememberId);
+                console.log(result);
+                if (result.length === 0)
+                    condition = false;
+            }
+
+            let resultRemember = await QueryAddRemember(rememberId, date, title, body, `${interaction.user.username}#${interaction.user.discriminator}`, interaction.user.id.toString());
+            if (resultRemember > 0) {
                 await interaction.reply({content: `Recordatorio guardado correctamente con fecha: ${date} y por titulo: ${title}, ID: ${rememberId}`});
             } else {
                 await interaction.reply({content: 'No se ha guardado, favor de contactar con el administrador'});
@@ -29,7 +43,9 @@ async function addRemember(interaction) {
 async function deleteRemember(interaction) {
     const rememberId = interaction.options.getString('id');
 
-    if (await QueryDeleteRemember(parseInt(rememberId))) {
+    const result = await QueryDeleteRemember(parseInt(rememberId));
+
+    if (result > 0) {
         await interaction.reply({content: 'Eliminado correctamente'});
     } else {
         await interaction.reply({content: 'No pude ser eliminado o no corresponde a un id existente'});
@@ -37,16 +53,14 @@ async function deleteRemember(interaction) {
 }
 
 async function embedRemember(client, MessageEmbed, detail) {
-    // query channelId
-    let jsonData = {...await QueryAll()};
 
     // channel for remember
-    const rememberChannel = client.channels.cache.get(jsonData.channelIdRemember);
+    const rememberChannel = client.channels.cache.get(process.env.CHANNELREMEMBER);
 
     const remember = await new MessageEmbed()
-        .setTitle(detail.title)
-        .setDescription(detail.description)
-        .setFooter(detail.user, (await client.users.fetch(detail.avatar)).displayAvatarURL({format: "png"}))
+        .setTitle(detail.titleRemember)
+        .setDescription(detail.bodyRemember)
+        .setFooter(detail.tagUser, (await client.users.fetch(detail.idUser)).displayAvatarURL({format: "png"}))
         .setColor(0x1E90FF)
         .setThumbnail('https://cdn.discordapp.com/attachments/875443272254894083/880998521321439242/reloj.png')
 

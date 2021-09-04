@@ -1,10 +1,12 @@
 // require
-const Canvas = require("canvas");
-const {QueryAll, QueryById, QueryAddUserId} = require("../utils/queryData");
+const Canvas = require('canvas');
+const {QueryMember, QueryAddMember} = require("../dao/entryDAO");
 
 module.exports = (client, MessageEmbed, MessageAttachment, MessageButton, MessageActionRow) => {
+
     client.on('guildMemberAdd', async member => {
-        if (await QueryById(member.user.id) === -1) {
+        const memberslst = await QueryMember(parseInt(member.user.id));
+        if (memberslst.length === 0) {
             // message private
             await sendMessagePrivate(MessageEmbed, MessageButton, MessageActionRow, member);
 
@@ -12,7 +14,7 @@ module.exports = (client, MessageEmbed, MessageAttachment, MessageButton, Messag
             await sendMessagePublic(member, MessageAttachment, client);
 
             // add new user
-            await QueryAddUserId(member.user.id);
+            await QueryAddMember(parseInt(member.user.id));
         }
     });
 }
@@ -66,20 +68,18 @@ async function sendMessagePrivate(MessageEmbed, MessageButton, MessageActionRow,
 }
 
 async function sendMessagePublic(member, MessageAttachment, client) {
-    // query channelId
-    let jsonData = {...await QueryAll()};
 
     // channel for welcome
-    const welcomeChannel = client.channels.cache.get(jsonData.channelId);
+    const welcomeChannel = client.channels.cache.get(process.env.CHANNELWELCOME);
 
     // load font
-    await Canvas.registerFont('./font/muktamalar.ttf', {family: 'MuktaMalar'})
+    await Canvas.registerFont('./src/font/muktamalar.ttf', {family: 'MuktaMalar'})
 
     // create image png of background with avatar image
     const canvasBackground = Canvas.createCanvas(1024, 500);
     const contextBackground = canvasBackground.getContext('2d');
 
-    const background = await Canvas.loadImage('./img/background.png');
+    const background = await Canvas.loadImage('./src/img/background.png');
     contextBackground.drawImage(background, 0, 0, canvasBackground.width, canvasBackground.height);
 
     contextBackground.strokeStyle = '#0099ff';
@@ -110,7 +110,7 @@ async function sendMessagePublic(member, MessageAttachment, client) {
     const typeBackground = await Canvas.loadImage(canvasBackground.toBuffer());
     contextHat.drawImage(typeBackground, 0, 0, canvasHat.width, canvasHat.height);
 
-    const hat = await Canvas.loadImage('./img/gorra.png');
+    const hat = await Canvas.loadImage('./src/img/gorra.png');
     contextHat.drawImage(hat, 424.58, 47.7);
 
     // create message with image
