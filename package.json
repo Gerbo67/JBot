@@ -15,12 +15,11 @@
     "cross-env": "^7.0.3",
     "discord.js": "^13.0.1",
     "dotenv": "^10.0.0",
-    "fs": "^0.0.1-security",
     "moment": "^2.29.1",
-    "node-cron": "^3.0.0"
+    "node-cron": "^3.0.0",
+    "mssql": "^7.2.1"
   },
   "devDependencies": {
-    "mssql": "^7.2.1",
     "nodemon": "^2.0.12"
   }
 }
