@@ -1,4 +1,5 @@
 FROM node:16
+FROM keymetrics/pm2:latest-alpine
 
 RUN mkdir -p /usr/src/app
 
@@ -13,4 +14,4 @@ COPY . .
 
 EXPOSE 3000
 
-CMD ["npm","start"]
+CMD [ "pm2-runtime", "start", "src/index.js" ]
