@@ -50,8 +50,9 @@ client.on('interactionCreate', async interaction => {
 
 
 // timer for day
-let hr = cron.schedule('1 0 * * *', async () => {
+let hr = cron.schedule('* */1 * * *', async () => {
     const data = await QueryAllRemember();
+    console.log({fechaActual:dateNow(), data: data});
     for (const detail of data) {
         if (detail.dateRemember === dateNow()) {
             await embedRemember(client, MessageEmbed, detail);
