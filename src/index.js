@@ -35,12 +35,16 @@ client.on('ready', async () => {
 
 // actions command
 client.on('interactionCreate', async interaction => {
-    if (interaction.commandName === 'recordatorio') {
-        await addRemember(interaction);
-    }
+    if(interaction.channelId == process.env.CHANNELREMEMBER){
+        if (interaction.commandName === 'recordatorio') {
+            await addRemember(interaction);
+        }
 
-    if (interaction.commandName === 'eliminar-recordatorio') {
-        await deleteRemember(interaction);
+        if (interaction.commandName === 'eliminar-recordatorio') {
+            await deleteRemember(interaction);
+        }
+    }else{
+        interaction.reply({content:'Este comando no es valido aqui', ephemeral: true})
     }
 });
 
