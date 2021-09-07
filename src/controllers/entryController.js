@@ -19,6 +19,7 @@ module.exports = (client, MessageEmbed, MessageAttachment, MessageButton, Messag
     });
 }
 
+// send message welcome private
 async function sendMessagePrivate(MessageEmbed, MessageButton, MessageActionRow, member) {
     // message private
     const welcome = await new MessageEmbed()
@@ -67,6 +68,7 @@ async function sendMessagePrivate(MessageEmbed, MessageButton, MessageActionRow,
     member.send({embeds: [welcome, games, spam], components: [row]});
 }
 
+// send message welcome public with canvas
 async function sendMessagePublic(member, MessageAttachment, client) {
 
     // channel for welcome

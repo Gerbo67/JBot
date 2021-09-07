@@ -35,30 +35,23 @@ client.on('ready', async () => {
 
 // actions command
 client.on('interactionCreate', async interaction => {
-    if (true) {
-        if (interaction.commandName === 'recordatorio') {
-            await addRemember(interaction);
-        }
+    if (interaction.commandName === 'recordatorio') {
+        await addRemember(interaction);
+    }
 
-        if (interaction.commandName === 'eliminar-recordatorio') {
-            await deleteRemember(interaction);
-        }
-    } else {
-        interaction.reply({content: "Comandos en mantenimiento"});
+    if (interaction.commandName === 'eliminar-recordatorio') {
+        await deleteRemember(interaction);
     }
 });
 
 
 // timer for day
-let hr = cron.schedule('59 * * * *', async () => {
+let hr = cron.schedule('10 * * * *', async () => {
+    // get remembers
     const data = await QueryAllRemember();
-    console.log(`<===================${dateNow()}===================>`);
-    console.log(data);
     for (const detail of data) {
-        if (detail.dateRemember === dateNow()) {
-            await embedRemember(client, MessageEmbed, detail);
-            await QueryDeleteRemember(detail.idRemember);
-        }
+        await embedRemember(client, MessageEmbed, detail);
+        await QueryDeleteRemember(detail.idRemember);
     }
     hr.start();
 });

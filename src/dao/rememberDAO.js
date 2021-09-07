@@ -47,8 +47,7 @@ async function QueryAllRemember() {
     try {
         const request = mssql.connection.request();
         const result = await request
-            .query(`SELECT *
-                    FROM Remembers`);
+            .execute('GetRemember');
         return result.recordset;
     } catch (err) {
         return err;
