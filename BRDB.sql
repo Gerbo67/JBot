@@ -1,28 +1,39 @@
-CREATE DATABASE BRDB;
+-----Production-----
+--Delete DATABASE
+DROP
+    DATABASE BRDB;
 
-USE BRDB;
+--Create DATABASE
+CREATE
+    DATABASE BRDB;
 
-DROP TABLE Remembers;
+--Use DATABASE
+USE
+    BRDB;
+---------Dev---------
+--Delete DATABASE
+DROP
+    DATABASE BRDBTest;
 
+--Create DATABASE
+CREATE
+    DATABASE BRDBTest;
+
+--Use DATABASE
+USE
+    BRDBTest;
+----------------------
+--Table Members
 CREATE TABLE Members
 (
-    idUser    BIGINT PRIMARY KEY,
-    dateEntry DATE NOT NULL,
+    idUser        BIGINT PRIMARY KEY,
+    tagUser       VARCHAR(100) NOT NULL,
+    dateEntry     DATE         NOT NULL,
+    dateNew       DATE         NOT NULL,
+    messagesTotal BIGINT       NOT NULL,
 );
 
-INSERT INTO Members
-VALUES (1218100471, GETDATE());
-INSERT INTO Members
-VALUES (1218100472, '2021/08/31');
-
-SELECT *
-FROM Remembers;
-
-DELETE
-FROM Remembers
-WHERE idRemember = 46287;
-
-
+--Table Remembers
 CREATE TABLE Remembers
 (
     idRemember    INT PRIMARY KEY,
@@ -30,26 +41,67 @@ CREATE TABLE Remembers
     titleRemember VARCHAR(100) NOT NULL,
     bodyRemember  VARCHAR(200) NOT NULL,
     tagUser       VARCHAR(50)  NOT NULL,
-    idUser        VARCHAR(20)  NOT NULL
-)
+    idUser        VARCHAR(20)  NOT NULL,
+    enable        TINYINT      NOT NULL
+);
 
-SELECT *
-FROM Remembers;
+--Table MessagesEntry
+CREATE TABLE MessagesEntry
+(
+    cardWelcomeBody   CHAR(400) COLLATE Latin1_General_100_CI_AI_SC_UTF8 NOT NULL,
+    cardWelcomeFooter CHAR(100) COLLATE Latin1_General_100_CI_AI_SC_UTF8 NOT NULL,
+    cardGamesTitle    CHAR(100) COLLATE Latin1_General_100_CI_AI_SC_UTF8 NOT NULL,
+    cardGamesFooter   CHAR(100) COLLATE Latin1_General_100_CI_AI_SC_UTF8 NOT NULL,
+    cardSocialTitle   CHAR(100) COLLATE Latin1_General_100_CI_AI_SC_UTF8 NOT NULL
+);
 
-INSERT INTO Remembers
-VALUES (48596, '08/09/21', 'Recordatorio 08', 'Ejemplo de prueba', 'Gerbo67#2644', '340555238874546178')
+--Table MessagesEntry
+CREATE TABLE MessageEntryGames
+(
+    idGame      INT IDENTITY (100,1)                               NOT NULL,
+    nameGame    CHAR(80) COLLATE Latin1_General_100_CI_AI_SC_UTF8  NOT NULL,
+    description CHAR(150) COLLATE Latin1_General_100_CI_AI_SC_UTF8 NOT NULL,
+);
 
-CREATE PROC GetRemember
+--Create GetRemember
+CREATE
+    PROC GetRemember
 AS
 BEGIN
-    DECLARE @fecha CHAR(10);
+    DECLARE
+        @fecha CHAR(10);
 
-    SET @fecha = (SELECT FORMAT(GETDATE(), 'dd/MM/yy'));
+    SET
+        @fecha = (SELECT FORMAT(GETDATE(), 'dd/MM/yy'));
 
-    SELECT * FROM Remembers WHERE dateRemember = @fecha;
-
+    SELECT *
+    FROM Remembers
+    WHERE dateRemember = @fecha
+      AND enable = 1;
 END
+GO;
 
-    EXEC GetRemember;
+--Exec PROC
+EXEC GetRemember;
 
-SELECT GETDATE();
+--Create SetCount
+ALTER PROC SetCount(@IdUser BIGINT, @TagUser VARCHAR(100))
+AS
+BEGIN
+    IF (EXISTS(SELECT 1 FROM Members WHERE idUser = @IdUser))
+        BEGIN
+            UPDATE Members
+            SET messagesTotal = ((SELECT messagesTotal FROM Members WHERE idUser = @IdUser) + 1),
+                dateNew       = GETDATE(),
+                tagUser       = @TagUser
+            WHERE idUser = @IdUser;
+        END
+    ELSE
+        BEGIN
+            INSERT INTO Members VALUES (@IdUser, @TagUser, GETDATE(), GETDATE(), 1);
+        END
+END
+GO;
+
+--Exec PROC
+EXEC SetCount

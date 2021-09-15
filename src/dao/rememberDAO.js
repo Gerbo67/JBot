@@ -7,7 +7,7 @@ async function QueryAddRemember(idRemember, date, title, body, userTag, userId) 
         const request = mssql.connection.request();
         const result = await request
             .query(`INSERT INTO Remembers
-                    VALUES (${idRemember}, '${date}', '${title}', '${body}', '${userTag}', '${userId}')`);
+                    VALUES (${idRemember}, '${date}', '${title}', '${body}', '${userTag}', '${userId}', 1)`);
         return result.rowsAffected[0];
     } catch (err) {
         return err;
@@ -33,9 +33,7 @@ async function QueryDeleteRemember(idRemember) {
     try {
         const request = mssql.connection.request();
         const result = await request
-            .query(`DELETE
-                    FROM Remembers
-                    WHERE idRemember = ${idRemember}`);
+            .query(`UPDATE Remembers SET enable = 0 WHERE idRemember = ${idRemember}`);
         return result.rowsAffected[0];
     } catch (err) {
         return err;

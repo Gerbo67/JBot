@@ -1,6 +1,8 @@
 // require
 const Canvas = require('canvas');
 const {QueryMember, QueryAddMember} = require("../dao/entryDAO");
+const {QueryCardsDetails, QueryGamesDetails} = require("../dao/entryDAO");
+const {MessageEmbed} = require("discord.js");
 
 module.exports = (client, MessageEmbed, MessageAttachment, MessageButton, MessageActionRow) => {
 
@@ -21,23 +23,30 @@ module.exports = (client, MessageEmbed, MessageAttachment, MessageButton, Messag
 
 // send message welcome private
 async function sendMessagePrivate(MessageEmbed, MessageButton, MessageActionRow, member) {
+    //Query details cards
+    const detailsLts = await QueryCardsDetails();
+
+    // Query details games
+    const gamesLts = await QueryGamesDetails();
+
     // message private
-    const welcome = await new MessageEmbed()
+    const welcome = new MessageEmbed()
         .setTitle(`Bienvenido ${member.user.username} a esta familia de MR BRO`)
-        .setFooter('Estamos ansiosos de conocerte')
-        .setDescription('En este servidor es dedicado a los juegos **Play to Earn**, porfavor de leer las reglas para no tener incovenientes, solo queda decirte que disfurtes tu estadia')
+        .setDescription(detailsLts.cardWelcomeBody.trim())
+        .setFooter(detailsLts.cardWelcomeFooter.trim())
         .setColor(0xB7FFB1)
         .setThumbnail('https://cdn.discordapp.com/icons/734787764679082174/17de276cc643ff817bbeabdb5696d36e.png')
-    const games = await new MessageEmbed()
-        .setTitle(`Estos son los juegos que jugamos actualmente:`)
-        .addField('🌷', '```Plant vs Undead```', true)
-        .addField('👾', '```Axis Infinity```', true)
-        .addField('🃏', '```Splinterlands```', true)
-        .setFooter('Puedes recomendar algun otro juego 🤗')
+    const games = new MessageEmbed()
+        .setTitle(detailsLts.cardGamesTitle.trim())
+        .setFooter(detailsLts.cardGamesFooter.trim())
         .setColor(0x1E90FF);
 
-    const spam = await new MessageEmbed()
-        .setTitle(`Mis Redes sociales`)
+    for (const gms of gamesLts) {
+        games.addField(gms.nameGame.trim(), '```' + gms.description.trim() + '```');
+    }
+
+    const spam = new MessageEmbed()
+        .setTitle(detailsLts.cardSocialTitle.trim())
         .setColor(0x4A1B63);
 
     const row = new MessageActionRow()
