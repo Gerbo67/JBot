@@ -21,19 +21,20 @@ client.on('ready', async () => {
 
     // send Welcome message
     await entry(client, MessageEmbed, MessageAttachment, MessageButton, MessageActionRow);
-
     /* code initial for bot into server
+
 
     // register commands
     await client.guilds.cache.get('875443271697068062')?.commands.create(firstCommand);
     await client.guilds.cache.get('875443271697068062')?.commands.create(secondCommand);
-    await client.guilds.cache.get('875443271697068062')?.commands.create(thirdCommand);
+    await client.guilds.cache.get('734787764679082174')?.commands.create(thirdCommand);
 
     await client.guilds.cache.get('734787764679082174')?.emojis.create('./img/twitch.png', 'Twitch');
     await client.guilds.cache.get('734787764679082174')?.emojis.create('./img/youtube.png', 'Youtube');
     await client.guilds.cache.get('734787764679082174')?.emojis.create('./img/instagram.png', 'Instagram');
     await client.guilds.cache.get('734787764679082174')?.emojis.create('./img/twitter.png', 'Twitter');
      */
+
 });
 
 // actions command
@@ -67,7 +68,7 @@ client.on('messageCreate', async (msg) => {
     }
 })
 
-async function ImagesTest(msg){
+async function ImagesTest(msg) {
     // channel for welcome
     const welcomeChannel = client.channels.cache.get(process.env.CHANNELWELCOME);
     // load font
@@ -120,14 +121,14 @@ async function ImagesTest(msg){
 
 // timer for day
 let hr = cron.schedule('18 * * * *', async () => {
-    try{ // get remembers
+    try { // get remembers
         const data = await QueryAllRemember();
         for (const detail of data) {
             await embedRemember(client, MessageEmbed, detail);
             await QueryDeleteRemember(detail.idRemember);
         }
         hr.start();
-    }catch (e) {
+    } catch (e) {
         return console.log({errorDetail: e})
     }
 });
