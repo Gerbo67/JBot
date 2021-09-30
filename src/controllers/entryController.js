@@ -77,9 +77,9 @@ async function sendMessagePrivate(MessageEmbed, MessageButton, MessageActionRow,
             );
 
         // send the embed to the same channel as the message
-        member.send({embeds: [welcome, games, spam], components: [row]});
+        member.send({embeds: [welcome, games, spam], components: [row]}).catch(console.error);
     } catch (e) {
-        return console.log({errorDetail: e})
+        console.log({errorDetail: e})
     }
 }
 
@@ -136,6 +136,6 @@ async function sendMessagePublic(member, MessageAttachment, client) {
         // send image
         welcomeChannel.send({files: [attachment]});
     } catch (e) {
-        return console.log({errorDetail: e})
+        console.log({errorDetail: e});
     }
 }
