@@ -35,4 +35,14 @@ const secondCommand = {
     }]
 };
 
-module.exports = {firstCommand, secondCommand};
+const thirdCommand = {
+    name: 'rank',
+    description: 'Obtiene el rango y nivel del usuario',
+    options: [{
+        name: 'usuario',
+        description: 'Usuario a consultar',
+        type: 'USER',
+    }]
+};
+
+module.exports = {firstCommand, secondCommand, thirdCommand};

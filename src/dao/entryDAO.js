@@ -8,7 +8,7 @@ async function QueryMember(idUser) {
         const result = await request
             .query(`SELECT *
                     FROM Members
-                    WHERE idUser = ${idUser}`);
+                    WHERE idUser = '${idUser}'`);
         return result.recordset;
     } catch (err) {
         return err;
@@ -21,7 +21,7 @@ async function QueryAddMember(idUser) {
         const request = mssql.connection.request();
         const result = await request
             .query(`INSERT INTO Members
-                    VALUES (${idUser}, GETDATE(), 0)`);
+                    VALUES ('${idUser}', GETDATE(), 0)`);
         return result;
     } catch (err) {
         return err;
