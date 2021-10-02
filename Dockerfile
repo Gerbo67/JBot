@@ -13,7 +13,6 @@ COPY . .
 
 FROM ubuntu:trusty
 ENV LANG en_US.UTF-8
-CMD ["/bin/bash"]
 
 EXPOSE 3000
 
