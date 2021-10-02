@@ -89,14 +89,14 @@ async function getData() {
     try {
         const request = mssql.connection.request();
         const result = await request
-            .query(`SELECT ROW_NUMBER()                       over (ORDER BY MP.countMessage DESC) as numberPosition, m.idUser,
+            .query(`SELECT ROW_NUMBER()                       over (ORDER BY m.messagesTotal DESC) as numberPositionGeneral, ROW_NUMBER() over (ORDER BY MP.countMessage DESC)  as numberPositionMonth, m.idUser,
                            m.tagUser,
                            FORMAT(m.dateEntry, 'dd/MM/yy') as dateEntry,
                            m.messagesTotal,
                            MP.countMessage,
                            m.level,
                            RM.idRank,
-                           RM.nombre
+                           RM.nombre                       as nameRank
                     FROM Members m
                              INNER JOIN RankMembers RM on m.idRank = RM.idRank
                              INNER JOIN MessagePosition MP on m.idUser = MP.idUser

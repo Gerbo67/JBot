@@ -47,7 +47,7 @@ CREATE TABLE MessagePosition
 (
     idUser       CHAR(20) NOT NULL,
     countMessage INT      NOT NULL,
-    month        CHAR     NOT NULL,
+    month        SMALLINT NOT NULL,
     year         SMALLINT NOT NULL
 );
 
@@ -127,7 +127,8 @@ BEGIN
         @fecha = (SELECT FORMAT(GETDATE(), 'dd/MM/yy'));
 
     SELECT r.idUser, m.tagUser, r.titleRemember, r.bodyRemember, r.idRemember
-    FROM Remembers r INNER JOIN Members M on r.idUser = M.idUser
+    FROM Remembers r
+             INNER JOIN Members M on r.idUser = M.idUser
     WHERE r.dateRemember = @fecha
       AND r.enable = 1;
 END
