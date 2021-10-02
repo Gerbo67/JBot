@@ -55,7 +55,7 @@ client.on('interactionCreate', async interaction => {
 
 
     if (interaction.commandName === 'rank')
-        await getRank(interaction);
+        await getRank(interaction, client);
 
 });
 

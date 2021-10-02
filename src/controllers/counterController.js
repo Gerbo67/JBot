@@ -80,26 +80,26 @@ async function removeRol(rank, msg) {
     }
 }
 
-async function getRank(interaction) {
+async function getRank(interaction, client) {
     try {
         const user = interaction.options.getUser('usuario');
         if (user != null)
-            await getMessageData(user.id, interaction);
+            await getMessageData(user.id, interaction, client);
         else
-            await getMessageData(interaction.user.id, interaction);
+            await getMessageData(interaction.user.id, interaction, client);
     } catch (e) {
         console.log({errorDetail: e})
         interaction.reply({content: "Intentalo de nuevo o consulta a Gerbo67", ephemeral: true});
     }
 }
 
-async function getMessageData(user, interaction) {
+async function getMessageData(user, interaction, client) {
     try {
         const lstData = await getData();
         if (lstData.length > 0) {
             for (const item of lstData) {
                 if (item.idUser.trim() == user) {
-                    const image = await ImageRank(formatData(item), interaction);
+                    const image = await ImageRank(formatData(item), client);
                     await interaction.reply({files: [image]});
                 }
             }
@@ -134,8 +134,7 @@ function formatData(item) {
     }
 }
 
-async function ImageRank(dataUser, interaction) {
-
+async function ImageRank(dataUser, client) {
     // load font
     await Canvas.registerFont('./src/font/muktamalar.ttf', {family: 'MuktaMalar'})
 
@@ -249,7 +248,8 @@ async function ImageRank(dataUser, interaction) {
     contextDetails.closePath();
     contextDetails.clip();
 
-    const avatar = await Canvas.loadImage(interaction.user.displayAvatarURL({format: 'png'}));
+    let member = await client.users.fetch(dataUser.idUser);
+    const avatar = await Canvas.loadImage(member.displayAvatarURL({format: 'png'}));
     contextDetails.drawImage(avatar, 450, 50, 120, 120);
 
 
